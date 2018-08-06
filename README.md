@@ -4,7 +4,11 @@
 - https://github.com/briannesbitt/carbon - DateTime wrapper
 
 To run project execute:
-`bin/console server:start`
+```
+git clone https://github.com/Jitra/sf4-rest-no-deps.git
+composer install
+bin/console server:start
+```
 
 Api contains swagger documentation at 
 `localhost:8000/documentation`
