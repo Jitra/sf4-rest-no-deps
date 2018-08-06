@@ -1,0 +1,540 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "## TEST WEB API\n---\n\n\n---\n## UUID\nEach entity has UUID as identifier.\n\n ---\n## Payload format\n\nEndpoints has standarized results format: `{\n  \"data\": {},\n  \"errors\":  {}\n}` only one of the property has content.\n\nEach entity has separated payloads for updating and fetching named __model__ and __form__.\n\neg entity __Foo__ has form named __FooForm__ and model named __Foo__\n\n ---\n\n## Status codes\nhttps://en.wikipedia.org/wiki/List_of_HTTP_status_codes\n\n ---\n\n\n## Server version\nEach response has headers with current server version. eg.\n\n `Api-Version: 1.0.0`\n\n ---\n ## Authorization\n Api consumes token based authorization header\n \n `Authorization: Bearer {TokenFromLogin}`\n\n# Maintainers\n\n  Mikołaj Woźniak\n\n ---\n",
+    "version": "1.0.0",
+    "title": "web test API"
+  },
+  "host": "localhost:8000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Api",
+      "description": "Informations about Api"
+    },
+    {
+      "name": "Session",
+      "description": "session managment"
+    },
+    {
+      "name": "User",
+      "description": "user managment"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Login",
+        "description": "",
+        "operationId": "login",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Login form",
+            "in": "body",
+            "description": "login and password to system",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginForm"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login data",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "$ref": "#/definitions/LoginData"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FormError"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "User list",
+        "description": "",
+        "operationId": "globalUserList",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "users",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/User"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FormError"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User create",
+        "description": "",
+        "operationId": "userCreate",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "description": "user model",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserCreateForm"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FormError"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "UUID duplicated"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "User single",
+        "description": "",
+        "operationId": "UserSingle",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of User",
+            "required": true,
+            "type": "string",
+            "format": "uuid",
+            "default": "c360a354-5fc3-11e7-907b-a6006ad3dba0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User single",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Entity not found"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "User update",
+        "description": "",
+        "operationId": "userUpdate",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "name": "user",
+            "description": "user model",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserUpdateForm"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "user",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/User",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/User"
+                  }
+                },
+                "draw": {
+                  "type": "integer",
+                  "description": "Defines order of the requests"
+                },
+                "recordsFiltered": {
+                  "type": "integer"
+                },
+                "recordsTotal": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FormError"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "UUID duplicated"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "User Delete",
+        "description": "",
+        "operationId": "UserDelete",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user",
+            "required": true,
+            "type": "string",
+            "format": "uuid",
+            "default": "a8222480-5caf-11e7-907b-a6006ad3dba0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EmptyResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    },
+    "UserCreateForm": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "format": "PhoneNumber"
+        },
+        "password": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    },
+    "UserUpdateForm": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "format": "PhoneNumber"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    },
+    "ForgotPasswordForm": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    },
+    "ResetPasswordForm": {
+      "type": "object",
+      "properties": {
+        "newPassword": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string",
+          "format": "hash"
+        }
+      }
+    },
+    "LoginForm": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string"
+        },
+        "deviceInfo": {
+          "$ref": "#/definitions/DeviceInfo"
+        },
+        "locale": {
+          "type": "string",
+          "enum": [
+            "en",
+            "pl"
+          ]
+        }
+      }
+    },
+    "LoginData": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "locale": {
+          "description": "can be null, default en",
+          "type": "string",
+          "enum": [
+            "en",
+            "pl"
+          ]
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "DeviceInfo": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "android",
+            "ios",
+            "angular",
+            "third-party"
+          ]
+        },
+        "deviceId": {
+          "type": "string",
+          "description": "can be null"
+        },
+        "pushNotificationToken": {
+          "type": "string",
+          "description": "can be null"
+        }
+      }
+    },
+    "FormError": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "object"
+        }
+      }
+    },
+    "EmptyResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object"
+        },
+        "errors": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

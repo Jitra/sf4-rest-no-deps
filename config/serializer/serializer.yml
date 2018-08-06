@@ -1,0 +1,29 @@
+'App\Entity\BaseUser':
+  attributes:
+    id:
+      groups: ['user']
+
+
+'App\Entity\User':
+  attributes:
+    email:
+      groups: ['user', 'session']
+    firstName:
+      groups: ['user', 'session']
+    lastName:
+      groups: ['user']
+    phoneNumber:
+      groups: ['user']
+
+
+'App\Entity\Session':
+  attributes:
+    id:
+      groups: ['session']
+    user:
+      groups: ['session']
+    token:
+      groups: ['session']
+    device:
+      groups: ['session']
+
